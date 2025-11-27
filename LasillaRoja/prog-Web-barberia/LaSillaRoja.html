@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La silla roja | Barberia</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="menu container">
+            <a href="#" class="logo">La Silla Roja</a>
+            <input type="checkbox" id="menu">
+            <label for="menu">
+                <span class="menu-icono">☰</span>
+            </label>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </nav>
+        <div class="header-content container">
+            <div class="header-txt">
+                <h1>Barberia</h1>
+                <span>La Silla Roja</span>
+                <p>
+                    Cada corte es una obra de arte. Somos un santuario del estilo donde la precisión clásica
+                    y las tendencias modernas se fusionan. Ven a descubrir una experiencia que redefine el
+                    cuidado personal masculino.
+                </p>  
+                <a href="#servicios" class="btn-1">Información</a>
+            </div>
+            <div class="header-dir">
+                <div class="dir">
+                    <h3>Dirección</h3>
+                    <p>Junín 1999</p>
+                </div>
+                <div class="dir">
+                    <h3>Teléfonos</h3>
+                    <p>3764-777777<br>3764-123456</p>
+                </div>
+                <div class="dir">
+                    <h3>Horario</h3>
+                    <p>Lunes a viernes:<br>8am hasta 8pm</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="welcome" id="inicio">
+        <div class="welcome-1"></div>
+        <div class="welcome-2">
+            <h2>Bienvenidos a la Barbería</h2>
+            <p class="b1">El arte del barbero</p>
+            <p>
+                En nuestra barbería, cada servicio es una dedicación completa. Con navaja en mano y un ojo para el detalle,
+                nuestros estilistas combinan técnicas clásicas con un toque de modernidad para darte el look perfecto. 
+                Te invitamos a sentarte en nuestra icónica silla roja y experimentar el verdadero significado del estilo.
+            </p>
+            <a href="#servicios" class="btn-1">Información</a>
+        </div>
+    </section>
+
+    <main class="services container" id="servicios">
+        <div class="services-txt">
+            <h2>Nuestros Servicios</h2>
+            <hr>
+            <p>
+                Explora nuestra gama completa de servicios, diseñados para el hombre que valora la tradición
+                y el estilo. Desde un afeitado impecable hasta el corte de cabello perfecto, cada servicio 
+                es ejecutado con la máxima precisión y dedicación para que te veas y te sientas renovado.
+            </p>
+        </div>
+        <div class="services-group">
+            <article class="services-1">
+                <img src="images/images/i1.svg" alt="Servicio a domicilio">
+                <h3>Servicio a Domicilio</h3>
+                <p>
+                    Disfruta de la experiencia de La Silla Roja desde la comodidad de tu hogar u oficina.
+                    Nos movemos por la ciudad para que no te muevas tú.
+                </p>
+                <a href="#contacto">Saber más</a>  
+            </article>  
+
+            <article class="services-1">
+                <img src="images/images/i2.svg" alt="Corte de cabello">
+                <h3>Corte de Cabello Clásico</h3>
+                <p>
+                    Nuestro servicio estrella. Un corte ejecutado a la perfección con técnicas tradicionales 
+                    que aseguran un estilo atemporal y un acabado preciso, adaptado a tu personalidad.
+                </p>
+                <a href="#contacto">Saber más</a>  
+            </article>  
+            
+            <article class="services-1">
+                <img src="images/images/i3.svg" alt="Paquete completo">
+                <h3>Paquete Completo</h3>
+                <p>
+                     Un servicio integral que incluye el corte de cabello, 
+                     el afeitado o arreglo de barba, y un tratamiento facial. 
+                     La experiencia completa de relajación y estilo en un solo paquete. 
+                </p>
+                <a href="#contacto">Saber más</a>  
+            </article>  
+        </div>
+        <a href="#contacto" class="btn-1">Más Información</a>
+    </main>
+    
+    <section class="turnos-section">
+        <div class="turnos-content container">
+            <h2>Sistema de Turnos</h2>
+            <hr>
+            <p>
+                En La Silla Roja valoramos tu tiempo. Nuestro sistema de turnos te permite 
+                saber exactamente cuánto tiempo falta para tu atención. Cada turno tiene una 
+                duración estimada de 10 segundos para brindarte el mejor servicio.
+            </p>
+
+            <div class="temporizador-box">
+                <div class="temporizador-label">Próximo Turno Disponible</div>
+            
+                <div class="temporizador-display" id="display">0</div>
+            
+                <div class="temporizador-unidad">Segundos</div>
+            
+                <div class="mensaje" id="mensaje"></div>
+            
+                <div class="temporizador-controls">
+                    <button class="btn-temporizador btn-iniciar" id="btnIniciar">
+                        ▶ Iniciar Turno
+                    </button>
+                    <button class="btn-temporizador btn-detener" id="btnDetener">
+                        ⏸ Pausar
+                    </button>
+                    <button class="btn-temporizador btn-reiniciar" id="btnReiniciar">
+                        ↻ Reiniciar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE PRODUCTOS DINÁMICOS -->
+    <section class="productos-dinamicos">
+        <div class="container">
+            <div class="productos-txt">
+                <h2>Nuestros Productos</h2>
+                <hr>
+                <p>
+                    Descubre nuestra selección de productos premium para el cuidado personal.
+                    Cada producto ha sido cuidadosamente seleccionado para brindarte la mejor
+                    calidad y resultados profesionales en casa.
+                </p>
+            </div>
+
+            <div class="productos-grid" id="productos-container">
+                <div class="loading-productos">
+                    <p>Cargando productos...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="princes" id="precios">
+        <div class="princes-1">
+            <h2>Lista de Precios</h2>
+            <p>
+                Nuestros precios son un reflejo de nuestro compromiso con la excelencia.
+                Cada servicio se realiza con la máxima dedicación, utilizando productos
+                de alta gama y la habilidad de nuestros expertos estilistas. Te invitamos
+                a invertir en tu imagen con la confianza de que recibirás una experiencia
+                de lujo, un trato personalizado y un resultado impecable.
+            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Corte</th>
+                        <td>$5.000</td>
+                    </tr>
+                    <tr>
+                        <th>Corte más arreglo de cejas</th>
+                        <td>$5.500</td>
+                    </tr>
+                    <tr>
+                        <th>Domicilio</th>
+                        <td>$6.500</td>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="#contacto" class="btn-1">Reservar Cita</a>
+        </div>
+        <div class="princes-2"></div>
+    </section>
+
+    <section class="personal container">
+        <div class="personal-txt">
+            <h2>Nuestros Estilistas</h2>
+            <hr>
+            <p>
+                Conoce al equipo de expertos detrás de cada corte perfecto. 
+                Nuestros estilistas no son solo profesionales; son verdaderos
+                artesanos dedicados a perfeccionar su oficio. Con años de experiencia
+                y una pasión inigualable por el estilo, te brindarán un servicio personalizado
+                y resultados que superarán tus expectativas.
+            </p>
+        </div>
+        <div class="personal-group">
+            <article class="personal-1">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Javier Mendoza - Barbero">
+                <h3>Javier Mendoza</h3>
+                <p>
+                   Con más de 20 años de experiencia, Javier es un maestro de los cortes clásicos
+                   y afeitados perfectos. Su precisión y dedicación aseguran un estilo impecable y atemporal.
+                </p>
+                <a href="#contacto">Saber más</a> 
+            </article>
+            <article class="personal-1">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Marco Solís - Barbero">
+                <h3>Marco Solís</h3>
+                <p>
+                     Especialista en las últimas tendencias y cortes urbanos.
+                     Con un ojo para el diseño y las líneas limpias, Marco te dará un look moderno y vanguardista,
+                     perfecto para el día a día.
+                </p>
+                <a href="#contacto">Saber más</a> 
+            </article>
+            <article class="personal-1">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Arturo Dávila - Barbero">
+                <h3>Arturo Dávila</h3>
+                <p>
+                     Un verdadero artista con la navaja. Arturo es nuestro experto en el cuidado de barbas y bigotes,
+                     combinando técnicas de antaño con una dedicación artesanal para crear un estilo único y lleno de carácter.
+                </p>
+                <a href="#contacto">Saber más</a> 
+            </article>
+        </div>
+        <a href="#contacto" class="btn-1">Conocer Equipo</a>
+    </section>
+
+<footer id="contacto">
+    <div class="footer-bg">
+        <h2>Reserva una Cita</h2>
+        <form id="formulario-contacto">
+            <div class="campo-1">
+                <input class="campo" type="text" id="nombre" placeholder="Nombre" required>
+                <input class="campo" type="tel" id="telefono" placeholder="Teléfono" required>
+            </div>
+            <div class="campo-1">
+                <input class="campo" type="text" id="direccion" placeholder="Dirección">
+                <input class="campo" type="email" id="correo" placeholder="Correo" required>
+            </div>
+            <textarea class="campo" id="mensaje" cols="30" rows="10" placeholder="Mensaje o comentarios adicionales"></textarea>
+            <input type="submit" value="Enviar Reserva" class="btn-1">
+        </form>
+    </div>
+    <div class="footer-txt">
+        <p>
+            © 2025 La Silla Roja. Todos los derechos reservados uwu.
+        </p>
+    </div>
+</footer>
+<script src="temporizador.js"></script>
+<script src="productos.js"></script>
+<script src="dist/formulario.js"></script>
+</body>
+</html>
