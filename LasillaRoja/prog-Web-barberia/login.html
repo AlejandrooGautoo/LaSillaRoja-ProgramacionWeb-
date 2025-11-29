@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | La Silla Roja</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <!-- Header que siempre está visible -->
+            <div class="login-header">
+                <h1> LOGIN </h1>
+            </div>
+
+            <!-- Contenido que se expande con hover -->
+            <div class="login-content">
+                <div class="error-message" id="errorMessage">
+                    Usuario o contraseña incorrectos
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="username" 
+                            placeholder="Usuario"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            placeholder="Contraseña"
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+
+                    <button type="submit" class="btn-login" id="btnLogin">
+                        <span class="btn-text">Iniciar Sesión</span>
+                        <div class="spinner" id="spinner"></div>
+                    </button>
+                </form>
+
+                <div class="links">
+                    <a href="#" id="forgotPassword">Olvidé mi Contraseña</a>
+                    <a href="#" id="signUp" class="signup-link">Registrarse</a>
+                </div>
+
+                <!-- Info de usuarios de prueba -->
+                <div class="test-users">
+                    <p><strong>Usuarios de prueba:</strong></p>
+                    <p>Admin: <span>admin / admin123</span></p>
+                    <p>Cliente: <span>cliente1 / cliente123</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #080710;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Fondo con imagen de barbería */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://wallpapers.com/images/hd/barber-shop-background-0t025mani5appwsc.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(0.4) blur(3px);
+    z-index: -2;
+}
+
+/* Overlay oscuro para mejor legibilidad */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    z-index: -1;
+}
+
+.login-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 10px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 60px rgba(220, 20, 60, 0.4);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Bordes animados */
+.login-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #DC143C, #8B0000, #DC143C);
+    background-size: 200% 100%;
+    animation: borderGlow 3s linear infinite;
+}
+
+.login-box::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #00d9ff, #0099ff, #00d9ff);
+    background-size: 200% 100%;
+    animation: borderGlow 3s linear infinite reverse;
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* Bordes laterales */
+.login-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(180deg, #DC143C, transparent);
+}
+
+/* Header siempre visible */
+.login-header {
+    padding: 40px 35px;
+    cursor: pointer;
+    position: relative;
+}
+
+.login-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(220, 20, 60, 0.7);
+    transition: all 0.3s ease;
+}
+
+/* Contenido oculto por defecto */
+.login-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 35px;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Al hacer hover, expandir */
+.login-box:hover .login-content {
+    max-height: 600px;
+    opacity: 1;
+    padding: 0 35px 40px 35px;
+}
+
+.login-box:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 80px rgba(220, 20, 60, 0.6);
+}
+
+.login-box:hover .login-header h1 {
+    transform: scale(0.95);
+}
+
+/* Animación de entrada para los elementos */
+.login-box:hover .input-group:nth-child(1) {
+    animation: slideIn 0.5s ease 0.1s backwards;
+}
+
+.login-box:hover .input-group:nth-child(2) {
+    animation: slideIn 0.5s ease 0.2s backwards;
+}
+
+.login-box:hover .btn-login {
+    animation: slideIn 0.5s ease 0.3s backwards;
+}
+
+.login-box:hover .links {
+    animation: slideIn 0.5s ease 0.4s backwards;
+}
+
+.login-box:hover .test-users {
+    animation: slideIn 0.5s ease 0.5s backwards;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-message {
+    display: none;
+    background: rgba(255, 50, 50, 0.3);
+    color: #ff6b6b;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 50, 50, 0.5);
+    font-size: 0.9em;
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+
+.error-message.show {
+    display: block;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 0 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input-group input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(220, 20, 60, 0.8);
+    box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+}
+
+.btn-login {
+    margin-top: 20px;
+    width: 100%;
+    background: linear-gradient(135deg, #DC143C, #8B0000);
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(220, 20, 60, 0.4);
+}
+
+.btn-login::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(220, 20, 60, 0.6);
+}
+
+.btn-login:hover::before {
+    left: 100%;
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.btn-login:disabled {
+    background: rgba(100, 100, 100, 0.5);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-login .btn-text {
+    display: inline-block;
+    transition: opacity 0.3s ease;
+}
+
+.btn-login.loading .btn-text {
+    opacity: 0;
+}
+
+.spinner {
+    display: none;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-login.loading .spinner {
+    display: block;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.links a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+.signup-link {
+    color: #00d9ff !important;
+    font-weight: 600;
+}
+
+.signup-link:hover {
+    color: #00f0ff !important;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.7);
+}
+
+.test-users {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
+.test-users p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.test-users p:first-child {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.test-users span {
+    color: #00d9ff;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .login-box {
+        width: 90%;
+    }
+    
+    .login-header {
+        padding: 30px 25px;
+    }
+    
+    .login-content {
+        padding: 0 25px;
+    }
+    
+    .login-box:hover .login-content {
+        padding: 0 25px 30px 25px;
+    }
+}

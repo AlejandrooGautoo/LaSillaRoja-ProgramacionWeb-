@@ -3,20 +3,79 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 
-
+// ========== IMPORTAR FUNCIONES DE DATABASE (MODIFICADO) ==========
 const {
     crearReserva,
     obtenerReservas,
     obtenerReservaPorId,
     actualizarReserva,
-    eliminarReserva
+    eliminarReserva,
+    validarLogin,
+    crearUsuario
 } = require('./database');
 
 app.use(express.static(__dirname));
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// ========== RUTAS DE AUTENTICACIÓN (NUEVAS) ==========
+
+// Ruta de Login
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Validación de campos
+    if (!username || !password) {
+        return res.status(400).json({
+            success: false,
+            message: 'Usuario y contraseña son requeridos'
+        });
+    }
+
+    // Validar credenciales
+    const resultado = validarLogin(username, password);
+
+    if (resultado.success) {
+        return res.json({
+            success: true,
+            usuario: resultado.usuario
+        });
+    } else {
+        return res.status(401).json({
+            success: false,
+            message: resultado.message
+        });
+    }
+});
+
+// Ruta de Registro (Opcional)
+app.post('/api/register', (req, res) => {
+    const { username, password, nombre_completo } = req.body;
+
+    // Validación de campos
+    if (!username || !password || !nombre_completo) {
+        return res.status(400).json({
+            success: false,
+            message: 'Todos los campos son requeridos'
+        });
+    }
+
+    // Crear usuario
+    const resultado = crearUsuario({
+        username,
+        password,
+        nombre_completo,
+        rol: 'cliente' // Por defecto los nuevos usuarios son clientes
+    });
+
+    if (resultado.success) {
+        return res.status(201).json(resultado);
+    } else {
+        return res.status(400).json(resultado);
+    }
+});
+
+// ========== RUTAS DE PRODUCTOS ==========
 
 const productos = [
     {
@@ -63,21 +122,20 @@ const productos = [
     }
 ];
 
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'LaSillaRoja.html'));
 });
-
 
 app.get('/api/productos', (req, res) => {
     res.json(productos);
 });
 
+// ========== RUTAS DE RESERVAS (CRUD) ==========
+
 app.post('/api/reservas', (req, res) => {
     try {
         const { nombre, telefono, direccion, correo, mensaje } = req.body;
 
-        
         if (!nombre || !telefono || !correo) {
             return res.status(400).json({
                 success: false,
@@ -85,7 +143,6 @@ app.post('/api/reservas', (req, res) => {
             });
         }
 
-        
         const resultado = crearReserva({ nombre, telefono, direccion, correo, mensaje });
         
         res.status(201).json(resultado);
@@ -107,14 +164,13 @@ app.get('/api/reservas', (req, res) => {
             reservas: reservas
         });
     } catch (error) {
-        console.error(' Error al obtener reservas:', error);
+        console.error('Error al obtener reservas:', error);
         res.status(500).json({
             success: false,
             message: 'Error al obtener las reservas'
         });
     }
 });
-
 
 app.get('/api/reservas/:id', (req, res) => {
     try {
@@ -133,7 +189,7 @@ app.get('/api/reservas/:id', (req, res) => {
             reserva: reserva
         });
     } catch (error) {
-        console.error(' Error al obtener reserva:', error);
+        console.error('Error al obtener reserva:', error);
         res.status(500).json({
             success: false,
             message: 'Error al obtener la reserva'
@@ -141,13 +197,11 @@ app.get('/api/reservas/:id', (req, res) => {
     }
 });
 
-
 app.put('/api/reservas/:id', (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const { nombre, telefono, direccion, correo, mensaje } = req.body;
 
-    
         if (!nombre || !telefono || !correo) {
             return res.status(400).json({
                 success: false,
@@ -163,7 +217,7 @@ app.put('/api/reservas/:id', (req, res) => {
         
         res.json(resultado);
     } catch (error) {
-        console.error(' Error al actualizar reserva:', error);
+        console.error('Error al actualizar reserva:', error);
         res.status(500).json({
             success: false,
             message: 'Error al actualizar la reserva'
@@ -182,7 +236,7 @@ app.delete('/api/reservas/:id', (req, res) => {
         
         res.json(resultado);
     } catch (error) {
-        console.error(' Error al eliminar reserva:', error);
+        console.error('Error al eliminar reserva:', error);
         res.status(500).json({
             success: false,
             message: 'Error al eliminar la reserva'
@@ -190,15 +244,31 @@ app.delete('/api/reservas/:id', (req, res) => {
     }
 });
 
+// ========== INICIAR SERVIDOR ==========
+
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`API de productos: http://localhost:${PORT}/api/productos`);
-    console.log(`API de reservas: http://localhost:${PORT}/api/reservas`);
-    console.log(`\nRutas CRUD disponibles:`);
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(` Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`${'='.repeat(60)}\n`);
+    
+    console.log(' Rutas de autenticación:');
+    console.log(`   POST   /api/login          - Iniciar sesión`);
+    console.log(`   POST   /api/register       - Registrar usuario\n`);
+    
+    console.log('  Rutas de productos:');
+    console.log(`   GET    /api/productos      - Listar productos\n`);
+    
+    console.log(' Rutas de reservas (CRUD):');
     console.log(`   POST   /api/reservas       - Crear reserva`);
     console.log(`   GET    /api/reservas       - Listar todas`);
     console.log(`   GET    /api/reservas/:id   - Obtener una`);
     console.log(`   PUT    /api/reservas/:id   - Actualizar`);
-    console.log(`   DELETE /api/reservas/:id   - Eliminar`);
+    console.log(`   DELETE /api/reservas/:id   - Eliminar\n`);
+    
+    console.log(`${'='.repeat(60)}`);
+    console.log(` Páginas disponibles:`);
+    console.log(`   http://localhost:${PORT}/login.html`);
+    console.log(`   http://localhost:${PORT}/LaSillaRoja.html`);
+    console.log(`${'='.repeat(60)}\n`);
 });
