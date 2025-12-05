@@ -20,6 +20,7 @@
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#productos">Productos</a></li>
+                    <li><a href="#mis-reservas">Mis Reservas</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </nav>
@@ -146,7 +147,7 @@
     </section>
 
     <!-- SECCIÓN DE PRODUCTOS DINÁMICOS -->
-    <section class="productos-dinamicos">
+    <section class="productos-dinamicos" id="productos">
         <div class="container">
             <div class="productos-txt">
                 <h2>Nuestros Productos</h2>
@@ -242,30 +243,59 @@
         <a href="#contacto" class="btn-1">Conocer Equipo</a>
     </section>
 
-<footer id="contacto">
-    <div class="footer-bg">
-        <h2>Reserva una Cita</h2>
-        <form id="formulario-contacto">
-            <div class="campo-1">
-                <input class="campo" type="text" id="nombre" placeholder="Nombre" required>
-                <input class="campo" type="tel" id="telefono" placeholder="Teléfono" required>
+    <!-- SECCIÓN DE MIS RESERVAS (NUEVA) -->
+    <section class="princes" id="mis-reservas" style="background: #1a1a1a; padding: 80px 0;">
+        <div class="container">
+            <div class="services-txt" style="text-align: center; margin-bottom: 40px;">
+                <h2 style="color: #DC143C;">Mis Reservas</h2>
+                <hr>
+                <p style="color: #fff;">
+                    Aquí puedes ver y gestionar tus reservas. Los administradores pueden ver todas las reservas del sistema,
+                    mientras que los clientes solo pueden ver sus propias reservas.
+                </p>
             </div>
-            <div class="campo-1">
-                <input class="campo" type="text" id="direccion" placeholder="Dirección">
-                <input class="campo" type="email" id="correo" placeholder="Correo" required>
+            
+            <div id="mensaje-cargando" style="text-align: center; color: white; font-size: 1.2em; padding: 40px;">
+                Cargando reservas...
             </div>
-            <textarea class="campo" id="mensaje" cols="30" rows="10" placeholder="Mensaje o comentarios adicionales"></textarea>
-            <input type="submit" value="Enviar Reserva" class="btn-1">
-        </form>
-    </div>
-    <div class="footer-txt">
-        <p>
-            © 2025 La Silla Roja. Todos los derechos reservados uwu.
-        </p>
-    </div>
-</footer>
-<script src="temporizador.js"></script>
-<script src="productos.js"></script>
-<script src="dist/formulario.js"></script>
+            
+            <div id="contenedor-reservas" style="display: none;">
+                <!-- Las reservas se cargarán aquí dinámicamente -->
+            </div>
+            
+            <div id="mensaje-sin-reservas" style="display: none; text-align: center; color: #888; font-size: 1.2em; padding: 40px;">
+                No tienes reservas aún. Crea una en la sección de contacto.
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-bg">
+            <h2>Reserva una Cita</h2>
+            <form id="formulario-contacto">
+                <div class="campo-1">
+                    <input class="campo" type="text" id="nombre" placeholder="Nombre" required>
+                    <input class="campo" type="tel" id="telefono" placeholder="Teléfono" required>
+                </div>
+                <div class="campo-1">
+                    <input class="campo" type="text" id="direccion" placeholder="Dirección">
+                    <input class="campo" type="email" id="correo" placeholder="Correo" required>
+                </div>
+                <textarea class="campo" id="mensaje" cols="30" rows="10" placeholder="Mensaje o comentarios adicionales"></textarea>
+                <input type="submit" value="Enviar Reserva" class="btn-1">
+            </form>
+        </div>
+        <div class="footer-txt">
+            <p>
+                © 2025 La Silla Roja. Todos los derechos reservados uwu.
+            </p>
+        </div>
+    </footer>
+    <script src="auth.js"></script>
+    <script src="reservas.js"></script>
+    <script src="listar-reservas.js"></script>
+    <script src="temporizador.js"></script>
+    <script src="productos.js"></script>
+    <!-- <script src="dist/formulario.js"></script> -->
 </body>
 </html>

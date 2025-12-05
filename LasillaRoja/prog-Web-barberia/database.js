@@ -4,21 +4,7 @@ const path = require('path');
 const dbPath = path.join(__dirname, 'barberia.db');
 const db = new Database(dbPath);
 
-// TABLA RESERVAS
-db.exec(`
-    CREATE TABLE IF NOT EXISTS reservas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        telefono TEXT NOT NULL,
-        direccion TEXT,
-        correo TEXT NOT NULL,
-        mensaje TEXT,
-        fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-        fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-`);
-
-// TABLA USUARIOS
+// TABLA USUARIOS (debe crearse primero por la relación FOREIGN KEY)
 db.exec(`
     CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +13,22 @@ db.exec(`
         nombre_completo TEXT NOT NULL,
         rol TEXT NOT NULL CHECK(rol IN ('admin', 'cliente')),
         fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+`);
+
+// TABLA RESERVAS (con relación a usuarios)
+db.exec(`
+    CREATE TABLE IF NOT EXISTS reservas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER,
+        nombre TEXT NOT NULL,
+        telefono TEXT NOT NULL,
+        direccion TEXT,
+        correo TEXT NOT NULL,
+        mensaje TEXT,
+        fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+        fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
     )
 `);
 
@@ -40,23 +42,25 @@ insertUsuario.run('admin', 'admin123', 'Administrador', 'admin');
 insertUsuario.run('cliente1', 'cliente123', 'Juan Pérez', 'cliente');
 insertUsuario.run('cliente2', 'cliente456', 'María González', 'cliente');
 
-console.log(' Base de datos SQLite conectada correctamente');
-console.log(` Ubicación: ${dbPath}`);
-console.log(' Usuarios de prueba creados:');
+console.log('Base de datos SQLite conectada correctamente');
+console.log(`Ubicación: ${dbPath}`);
+console.log('Usuarios de prueba creados:');
 console.log('   - admin / admin123 (ROL: admin)');
 console.log('   - cliente1 / cliente123 (ROL: cliente)');
 console.log('   - cliente2 / cliente456 (ROL: cliente)');
 
 // ========== FUNCIONES CRUD RESERVAS ==========
+
+// Crear reserva (con usuario_id)
 function crearReserva(datos) {
-    const { nombre, telefono, direccion, correo, mensaje } = datos;
+    const { usuario_id, nombre, telefono, direccion, correo, mensaje } = datos;
     
     const stmt = db.prepare(`
-        INSERT INTO reservas (nombre, telefono, direccion, correo, mensaje)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO reservas (usuario_id, nombre, telefono, direccion, correo, mensaje)
+        VALUES (?, ?, ?, ?, ?, ?)
     `);
     
-    const result = stmt.run(nombre, telefono, direccion || '', correo, mensaje || '');
+    const result = stmt.run(usuario_id || null, nombre, telefono, direccion || '', correo, mensaje || '');
     
     return {
         success: true,
@@ -65,16 +69,25 @@ function crearReserva(datos) {
     };
 }
 
+// Obtener todas las reservas (solo para admin)
 function obtenerReservas() {
     const stmt = db.prepare('SELECT * FROM reservas ORDER BY fecha_creacion DESC');
     return stmt.all();
 }
 
+// Obtener reservas de un usuario específico (para clientes)
+function obtenerReservasPorUsuario(usuario_id) {
+    const stmt = db.prepare('SELECT * FROM reservas WHERE usuario_id = ? ORDER BY fecha_creacion DESC');
+    return stmt.all(usuario_id);
+}
+
+// Obtener reserva por ID
 function obtenerReservaPorId(id) {
     const stmt = db.prepare('SELECT * FROM reservas WHERE id = ?');
     return stmt.get(id);
 }
 
+// Actualizar reserva
 function actualizarReserva(id, datos) {
     const { nombre, telefono, direccion, correo, mensaje } = datos;
     
@@ -104,6 +117,7 @@ function actualizarReserva(id, datos) {
     };
 }
 
+// Eliminar reserva
 function eliminarReserva(id) {
     const stmt = db.prepare('DELETE FROM reservas WHERE id = ?');
     const result = stmt.run(id);
@@ -121,11 +135,15 @@ function eliminarReserva(id) {
     };
 }
 
+// ========== FUNCIONES DE USUARIOS ==========
+
+// Buscar usuario por username
 function buscarUsuario(username) {
     const stmt = db.prepare('SELECT * FROM usuarios WHERE username = ?');
     return stmt.get(username);
 }
 
+// Validar login
 function validarLogin(username, password) {
     const stmt = db.prepare('SELECT * FROM usuarios WHERE username = ? AND password = ?');
     const usuario = stmt.get(username, password);
@@ -148,6 +166,7 @@ function validarLogin(username, password) {
     };
 }
 
+// Crear nuevo usuario
 function crearUsuario(datos) {
     const { username, password, nombre_completo, rol = 'cliente' } = datos;
     
@@ -178,13 +197,18 @@ function crearUsuario(datos) {
     }
 }
 
+// ========== EXPORTAR FUNCIONES ==========
+
 module.exports = {
     db,
+    // Funciones de reservas
     crearReserva,
     obtenerReservas,
+    obtenerReservasPorUsuario,
     obtenerReservaPorId,
     actualizarReserva,
     eliminarReserva,
+    // Funciones de usuarios
     buscarUsuario,
     validarLogin,
     crearUsuario

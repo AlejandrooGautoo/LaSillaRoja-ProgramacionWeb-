@@ -7,6 +7,7 @@ const app = express();
 const {
     crearReserva,
     obtenerReservas,
+    obtenerReservasPorUsuario,
     obtenerReservaPorId,
     actualizarReserva,
     eliminarReserva,
@@ -18,7 +19,7 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ========== RUTAS DE AUTENTICACIÓN (NUEVAS) ==========
+// ========== RUTAS DE AUTENTICACIÓN ==========
 
 // Ruta de Login
 app.post('/api/login', (req, res) => {
@@ -130,11 +131,12 @@ app.get('/api/productos', (req, res) => {
     res.json(productos);
 });
 
-// ========== RUTAS DE RESERVAS (CRUD) ==========
+// ========== RUTAS DE RESERVAS (CRUD CON ROLES) ==========
 
+// Crear reserva (CON USUARIO_ID)
 app.post('/api/reservas', (req, res) => {
     try {
-        const { nombre, telefono, direccion, correo, mensaje } = req.body;
+        const { nombre, telefono, direccion, correo, mensaje, usuario_id } = req.body;
 
         if (!nombre || !telefono || !correo) {
             return res.status(400).json({
@@ -143,7 +145,14 @@ app.post('/api/reservas', (req, res) => {
             });
         }
 
-        const resultado = crearReserva({ nombre, telefono, direccion, correo, mensaje });
+        const resultado = crearReserva({ 
+            usuario_id, 
+            nombre, 
+            telefono, 
+            direccion, 
+            correo, 
+            mensaje 
+        });
         
         res.status(201).json(resultado);
     } catch (error) {
@@ -155,9 +164,28 @@ app.post('/api/reservas', (req, res) => {
     }
 });
 
+// Obtener reservas (FILTRADO POR ROL)
 app.get('/api/reservas', (req, res) => {
     try {
-        const reservas = obtenerReservas();
+        const { usuario_id, rol } = req.query;
+        
+        let reservas;
+        
+        // Si es admin, ve todas las reservas
+        if (rol === 'admin') {
+            reservas = obtenerReservas();
+            console.log(` Admin solicitó todas las reservas (${reservas.length})`);
+        } 
+        // Si es cliente, solo ve sus reservas
+        else if (usuario_id) {
+            reservas = obtenerReservasPorUsuario(parseInt(usuario_id));
+            console.log(` Cliente ${usuario_id} solicitó sus reservas (${reservas.length})`);
+        } 
+        // Si no hay rol o usuario_id, devuelve todas (compatibilidad)
+        else {
+            reservas = obtenerReservas();
+        }
+        
         res.json({
             success: true,
             total: reservas.length,
@@ -172,6 +200,7 @@ app.get('/api/reservas', (req, res) => {
     }
 });
 
+// Obtener reserva por ID
 app.get('/api/reservas/:id', (req, res) => {
     try {
         const id = parseInt(req.params.id);
@@ -197,6 +226,7 @@ app.get('/api/reservas/:id', (req, res) => {
     }
 });
 
+// Actualizar reserva
 app.put('/api/reservas/:id', (req, res) => {
     try {
         const id = parseInt(req.params.id);
@@ -225,15 +255,28 @@ app.put('/api/reservas/:id', (req, res) => {
     }
 });
 
+// Eliminar reserva (SOLO ADMIN)
 app.delete('/api/reservas/:id', (req, res) => {
     try {
         const id = parseInt(req.params.id);
+        const { rol } = req.query;
+        
+        // Solo admin puede eliminar
+        if (rol !== 'admin') {
+            console.log(` Cliente intentó eliminar reserva ${id} - DENEGADO`);
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permisos para eliminar reservas'
+            });
+        }
+        
         const resultado = eliminarReserva(id);
         
         if (!resultado.success) {
             return res.status(404).json(resultado);
         }
         
+        console.log(` Admin eliminó reserva ${id}`);
         res.json(resultado);
     } catch (error) {
         console.error('Error al eliminar reserva:', error);
@@ -249,25 +292,25 @@ app.delete('/api/reservas/:id', (req, res) => {
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`\n${'='.repeat(60)}`);
-    console.log(` Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
     console.log(`${'='.repeat(60)}\n`);
     
     console.log(' Rutas de autenticación:');
     console.log(`   POST   /api/login          - Iniciar sesión`);
     console.log(`   POST   /api/register       - Registrar usuario\n`);
     
-    console.log('  Rutas de productos:');
+    console.log(' Rutas de productos:');
     console.log(`   GET    /api/productos      - Listar productos\n`);
     
-    console.log(' Rutas de reservas (CRUD):');
+    console.log('Rutas de reservas (CRUD con roles):');
     console.log(`   POST   /api/reservas       - Crear reserva`);
-    console.log(`   GET    /api/reservas       - Listar todas`);
+    console.log(`   GET    /api/reservas       - Listar (filtrado por rol)`);
     console.log(`   GET    /api/reservas/:id   - Obtener una`);
     console.log(`   PUT    /api/reservas/:id   - Actualizar`);
-    console.log(`   DELETE /api/reservas/:id   - Eliminar\n`);
+    console.log(`   DELETE /api/reservas/:id   - Eliminar (solo admin)\n`);
     
     console.log(`${'='.repeat(60)}`);
-    console.log(` Páginas disponibles:`);
+    console.log(`Páginas disponibles:`);
     console.log(`   http://localhost:${PORT}/login.html`);
     console.log(`   http://localhost:${PORT}/LaSillaRoja.html`);
     console.log(`${'='.repeat(60)}\n`);
